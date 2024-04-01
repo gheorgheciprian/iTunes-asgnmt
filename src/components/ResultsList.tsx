@@ -1,11 +1,24 @@
 import { ResultItem } from "@/utils/types";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-interface ResultsListProps {
-  results: ResultItem[];
-}
+interface ResultsListProps {}
 
-const ResultsList: React.FC<ResultsListProps> = ({ results }) => {
+const ResultsList: React.FC<ResultsListProps> = () => {
+  const [searchResults, setSearchResults] = useState<ResultItem[]>([]);
+  const channelName = "search-results-channel";
+
+  useEffect(() => {
+    const broadcastChannel = new BroadcastChannel(channelName);
+
+    broadcastChannel.onmessage = (event) => {
+      setSearchResults(event.data);
+    };
+
+    return () => {
+      broadcastChannel.close();
+    };
+  }, []);
+
   return (
     <div>
       {results.length === 0 ? (

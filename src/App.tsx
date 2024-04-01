@@ -16,7 +16,7 @@ function App() {
             element={
               <>
                 <SearchForm setSearchResults={setSearchResults} />
-                <ResultsList results={searchResults} />
+                <ResultsList />
               </>
             }
           />
