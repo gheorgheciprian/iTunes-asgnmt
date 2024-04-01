@@ -1,9 +1,9 @@
 import useFetchSearchResults from "@/api/fetchSearchResults";
-import { ResultItem } from "@/utils/types";
+import { iTunesResults } from "@/utils/types";
 import React, { useState, useEffect } from "react";
 
 interface SearchFormProps {
-  setSearchResults: (results: ResultItem[]) => void;
+  setSearchResults: (results: iTunesResults[]) => void;
 }
 
 const SearchForm: React.FC<SearchFormProps> = ({ setSearchResults }) => {

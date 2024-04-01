@@ -2,10 +2,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import SearchForm from "./components/SearchForm";
 import ResultsList from "./components/ResultsList";
-import { ResultItem } from "./utils/types";
+import { iTunesResults } from "./utils/types";
 
 function App() {
-  const [searchResults, setSearchResults] = useState<ResultItem[]>([]);
+  const [searchResults, setSearchResults] = useState<iTunesResults[]>([]);
 
   return (
     <BrowserRouter>

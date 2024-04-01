@@ -1,4 +1,4 @@
-export interface ResultItem {
+export interface iTunesResults {
   trackName: string;
   artistName: string;
   artworkUrl100: string;
