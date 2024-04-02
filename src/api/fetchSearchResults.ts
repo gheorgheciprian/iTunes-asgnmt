@@ -21,7 +21,6 @@ const useFetchSearchResults = ({
 
   const fetchData = useCallback(async () => {
     if (!searchTerm) return;
-
     setIsLoading(true);
     setError(null);
 
@@ -47,7 +46,7 @@ const useFetchSearchResults = ({
     }
   }, [searchTerm]);
 
-  const debouncedFetchData = useCallback(debounce(fetchData, 100), [fetchData]);
+  const debouncedFetchData = useCallback(debounce(fetchData, 500), [fetchData]);
 
   useEffect(() => {
     debouncedFetchData();
