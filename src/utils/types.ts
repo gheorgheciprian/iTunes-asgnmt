@@ -4,6 +4,8 @@ export interface iTunesResults {
   artworkUrl30: string;
   previewUrl: string;
   trackId: string;
+  wrapperType: string;
+  kind: string;
 }
 
 export const channelName = "search-results-channel";

@@ -6,6 +6,7 @@ const ResultItem: React.FC<iTunesResults> = ({
   artworkUrl30,
   trackName,
   artistName,
+  wrapperType,
 }) => {
   return (
     <li key={trackId} className="{/* Add Tailwind styles for item */}">
@@ -16,6 +17,7 @@ const ResultItem: React.FC<iTunesResults> = ({
       />
       <h3>{trackName}</h3>
       <p>By: {artistName}</p>
+      <p>Type: {wrapperType}</p>
     </li>
   );
 };
