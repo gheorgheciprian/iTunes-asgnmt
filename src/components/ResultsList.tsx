@@ -1,17 +1,17 @@
-import { ResultItem } from "@/utils/types";
 import React, { useEffect, useState } from "react";
+import { channelName, iTunesResults } from "@/utils/types";
+import ResultItem from "./ResultItem";
+import RenderIfVisible from "react-render-if-visible";
+import { Separator } from "./ui/separator";
 
-interface ResultsListProps {}
-
-const ResultsList: React.FC<ResultsListProps> = () => {
-  const [searchResults, setSearchResults] = useState<ResultItem[]>([]);
-  const channelName = "search-results-channel";
+const ResultsList: React.FC = () => {
+  const [searchResults, setSearchResults] = useState<iTunesResults[]>([]);
 
   useEffect(() => {
     const broadcastChannel = new BroadcastChannel(channelName);
 
     broadcastChannel.onmessage = (event) => {
-      setSearchResults(event.data);
+      setSearchResults(event.data.data);
     };
 
     return () => {
@@ -21,26 +21,16 @@ const ResultsList: React.FC<ResultsListProps> = () => {
 
   return (
     <div>
-      {results.length === 0 ? (
-        <p>No results found</p>
-      ) : (
+      <RenderIfVisible>
         <ul className="{/* Add Tailwind styles for list */}">
-          {results.map((result) => (
-            <li
-              key={result.trackId}
-              className="{/* Add Tailwind styles for item */}"
-            >
-              <img
-                src={result.artworkUrl100}
-                alt={result.trackName}
-                className="{/* Add Tailwind styles for image */}"
-              />
-              <h3>{result.trackName}</h3>
-              <p>By: {result.artistName}</p>
-            </li>
+          {searchResults.map((result) => (
+            <div>
+              <ResultItem key={result.trackId} {...result} />
+              <Separator className="my-4 bg-gray-50" />
+            </div>
           ))}
         </ul>
-      )}
+      </RenderIfVisible>
     </div>
   );
 };

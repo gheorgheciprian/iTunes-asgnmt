@@ -1,21 +1,22 @@
 import useFetchSearchResults from "@/api/fetchSearchResults";
-import { ResultItem } from "@/utils/types";
 import { BroadcastChannel } from "broadcast-channel";
+import { channelName, iTunesResults } from "@/utils/types";
 import React, { useState, useEffect } from "react";
+import { Input } from "@/components/ui/input";
 
-interface SearchFormProps {
-  setSearchResults: (results: ResultItem[]) => void;
-}
-
-const SearchForm: React.FC<SearchFormProps> = ({ setSearchResults }) => {
+const SearchForm: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isResultsTabOpen, setIsResultsTabOpen] = useState(false);
-  const { results, isLoading, error } = useFetchSearchResults({ searchTerm });
+  const { results, isLoading, error } = useFetchSearchResults({
+    searchTerm,
+  });
+
   let resultsTab: Window | null = null;
-  const channelName = "search-results-channel";
+
   const broadcastChannel = new BroadcastChannel(channelName);
 
-  const broadcastResults = (results: ResultItem[]) => {
+  console.log(results);
+  const broadcastResults = (results: iTunesResults[]) => {
     try {
       broadcastChannel.postMessage(results);
     } catch (error) {
@@ -24,16 +25,16 @@ const SearchForm: React.FC<SearchFormProps> = ({ setSearchResults }) => {
   };
 
   useEffect(() => {
-    setSearchResults(results);
+    broadcastResults(results);
+
     return () => {
       broadcastChannel.close();
     };
-  }, [results, setSearchResults]);
+  }, [broadcastChannel, results]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     openResultsTab();
-    broadcastResults(results);
   };
 
   const openResultsTab = () => {
@@ -46,23 +47,25 @@ const SearchForm: React.FC<SearchFormProps> = ({ setSearchResults }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        placeholder="Enter your search term"
-        className="{/* Add Tailwind styles */}"
-      />
-      <button
-        type="submit"
-        className="{/* Add Tailwind styles */}"
-        disabled={isLoading}
-      >
-        {isLoading ? "Loading..." : "Search"}
-      </button>
-      {error && <p className="error-message">{error}</p>}
-    </form>
+    <div className="h-screen w-screen flex items-center justify-center">
+      <form onSubmit={handleSubmit}>
+        <Input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Enter your search term"
+        />
+
+        <button
+          type="submit"
+          className="{/* Add Tailwind styles */}"
+          disabled={isLoading}
+        >
+          {isLoading ? "Loading..." : "Search"}
+        </button>
+        {error && <p className="error-message">{error}</p>}
+      </form>
+    </div>
   );
 };
 

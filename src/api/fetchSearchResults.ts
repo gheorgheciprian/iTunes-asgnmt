@@ -1,4 +1,4 @@
-import { ResultItem } from "@/utils/types";
+import { iTunesResults } from "@/utils/types";
 import { useState, useEffect, useCallback } from "react";
 import { debounce } from "lodash";
 
@@ -7,7 +7,7 @@ interface UseFetchSearchResultsProps {
 }
 
 interface FetchSearchResults {
-  results: ResultItem[];
+  results: iTunesResults[];
   isLoading: boolean;
   error: string | null;
 }
@@ -17,11 +17,10 @@ const useFetchSearchResults = ({
 }: UseFetchSearchResultsProps): FetchSearchResults => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [results, setResults] = useState<ResultItem[]>([]);
+  const [results, setResults] = useState<iTunesResults[]>([]);
 
   const fetchData = useCallback(async () => {
     if (!searchTerm) return;
-
     setIsLoading(true);
     setError(null);
 
@@ -47,7 +46,7 @@ const useFetchSearchResults = ({
     }
   }, [searchTerm]);
 
-  const debouncedFetchData = useCallback(debounce(fetchData, 100), [fetchData]);
+  const debouncedFetchData = useCallback(debounce(fetchData, 500), [fetchData]);
 
   useEffect(() => {
     debouncedFetchData();
