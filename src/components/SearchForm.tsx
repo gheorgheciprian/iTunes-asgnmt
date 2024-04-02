@@ -3,10 +3,12 @@ import { BroadcastChannel } from "broadcast-channel";
 import { channelName, iTunesResults } from "@/utils/types";
 import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
+import { Button } from "./ui/button";
 
 const SearchForm: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isResultsTabOpen, setIsResultsTabOpen] = useState(false);
+
   const { results, isLoading, error } = useFetchSearchResults({
     searchTerm,
   });
@@ -15,7 +17,6 @@ const SearchForm: React.FC = () => {
 
   const broadcastChannel = new BroadcastChannel(channelName);
 
-  console.log(results);
   const broadcastResults = (results: iTunesResults[]) => {
     try {
       broadcastChannel.postMessage(results);
@@ -25,12 +26,14 @@ const SearchForm: React.FC = () => {
   };
 
   useEffect(() => {
-    broadcastResults(results);
+    if (isResultsTabOpen) {
+      broadcastResults(results);
+    }
 
     return () => {
       broadcastChannel.close();
     };
-  }, [broadcastChannel, results]);
+  }, [broadcastChannel, results, isResultsTabOpen]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -48,21 +51,18 @@ const SearchForm: React.FC = () => {
 
   return (
     <div className="h-screen w-screen flex items-center justify-center">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="flex items-center ">
         <Input
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Enter your search term"
+          className="rounded-full"
         />
 
-        <button
-          type="submit"
-          className="{/* Add Tailwind styles */}"
-          disabled={isLoading}
-        >
+        <Button type="submit" disabled={isLoading}>
           {isLoading ? "Loading..." : "Search"}
-        </button>
+        </Button>
         {error && <p className="error-message">{error}</p>}
       </form>
     </div>

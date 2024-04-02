@@ -1,48 +1,58 @@
-import React, { useState, ChangeEvent, useEffect } from "react";
+import { FilterValues } from "@/utils/types";
+import React, { ChangeEvent } from "react";
 
 interface FilterOptionsProps {
   onSearchFilterChange: (
-    selectedType: string | null,
-    selectedKind: string | null
+    newType: FilterValues | null,
+    newKind: FilterValues | null
   ) => void;
+  selectedType: FilterValues | null;
+  selectedKind: FilterValues | null;
+  className: string;
 }
 
 const FilterOptions: React.FC<FilterOptionsProps> = ({
   onSearchFilterChange,
+  selectedType,
+  selectedKind,
+  className,
 }) => {
-  const [selectedType, setSelectedType] = useState<string | null>(null);
-  const [selectedKind, setSelectedKind] = useState<string | null>(null);
-
   const handleTypeChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setSelectedType(e.target.value === "All" ? null : e.target.value);
+    onSearchFilterChange(
+      e.target.value === FilterValues.All
+        ? null
+        : (e.target.value as FilterValues),
+      selectedKind
+    );
   };
 
   const handleKindChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setSelectedKind(e.target.value === "All" ? null : e.target.value);
+    onSearchFilterChange(
+      selectedType,
+      e.target.value === FilterValues.All
+        ? null
+        : (e.target.value as FilterValues)
+    );
   };
 
-  useEffect(() => {
-    onSearchFilterChange(selectedType, selectedKind);
-  }, [onSearchFilterChange, selectedType, selectedKind]);
-
   return (
-    <div className="{/* Add Tailwind styles for FilterOptions container */}">
+    <div className={className}>
       <div>
         <label htmlFor="wrapperType">Wrapper Type:</label>
         <select id="wrapperType" onChange={handleTypeChange}>
-          <option value="All">All</option>
-          <option value="track">Tracks</option>
-          <option value="audiobook">Audiobooks</option>
+          <option value={FilterValues.All}>All</option>
+          <option value={FilterValues.Track}>Tracks</option>
+          <option value={FilterValues.Audiobook}>Audiobooks</option>
         </select>
       </div>
       <div>
         <label htmlFor="kind">Kind:</label>
         <select id="kind" onChange={handleKindChange}>
-          <option value="All">All</option>
-          <option value="song">Song</option>
-          <option value="podcast">Podcast</option>
-          <option value="tv-episode">TV Episode</option>
-          <option value="feature-movie">Feature Movie</option>
+          <option value={FilterValues.All}>All</option>
+          <option value={FilterValues.Song}>Song</option>
+          <option value={FilterValues.Podcast}>Podcast</option>
+          <option value={FilterValues.TVEpisode}>TV Episode</option>
+          <option value={FilterValues.FeatureMovie}>Feature Movie</option>
         </select>
       </div>
     </div>
